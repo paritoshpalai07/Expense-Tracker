@@ -88,6 +88,9 @@ class Expense(db.Model):
             case "Home":
                 expense_list = [expense.amount for expense in expenses if expense.category == category]
                 return float(sum(expense_list))
+            case "Rent":
+                expense_list = [expense.amount for expense in expenses if expense.category == category]
+                return float(sum(expense_list))
 
     def __repr__(self):
         return '<Expense {}>'.format(self.amount)

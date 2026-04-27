@@ -38,7 +38,7 @@
                                 {% endif %}
                             </p>
                             <img 
-                            class="inline size-6 mb-2 hover:size-7 transition-all cursor-pointer" 
+                            class="inline size-6 mb-2 cursor-pointer" 
                             src="{{url_for('static', filename='images/plus-bold.svg')}}" 
                             alt="plus-icon"
                             onclick="document.getElementById('income-form').classList.toggle('hidden');
@@ -83,7 +83,7 @@
                 <h2 class="font-bold text-2xl">
                     Expenses 
                     <img 
-                        class="inline size-6 hover:size-7 transition-all cursor-pointer" 
+                        class="inline size-6 cursor-pointer" 
                         src="{{url_for('static', filename='images/plus-bold.svg')}}" 
                         alt="plus-icon"
                         onclick="
@@ -139,7 +139,7 @@
                                     </span>
                                     <span>
                                         <span class="inline mr-3">
-                                            <img class="size-5 inline" src="{{url_for('static', filename='images/fork-and-knife_gray.svg')}}" alt="">
+                                            <img class="size-5 inline" src="{{url_for('static', filename=svg_list[expense.category])}}" alt="">
                                             <span>{{expense.category}}</span>
                                         </span> 
                                         <span class="mr-3">₹{{expense.amount}}</span> 
@@ -176,10 +176,10 @@
             </div> -->
 
             <div class="bg-base-100 col-span-2 row-span-2 rounded-2xl p-4">
-                <h2 class="font-bold text-2xl mb-5">Categories</h2>
+                <h2 class="font-bold text-2xl mb-2">Categories</h2>
 
 
-            <ul>
+            <ul class="text-xs">
                 <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
                     <span>
                         <img class="size-5 inline" src="{{url_for('static', filename='images/fork-and-knife_gray.svg')}}" alt="fork and knife">
@@ -210,31 +210,38 @@
                 </li>
                 <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
                     <span>
-                        <img class="size-5 inline" src="{{url_for('static', filename='images/star_gray.svg')}}" alt="car">
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/star_gray.svg')}}" alt="star-icon">
                         <span class="inline">Entertainment</span>
                     </span>
                     <span>₹{{total_entertainment_amount}}</span>
                 </li>
                 <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
                     <span>
-                        <img class="size-5 inline" src="{{url_for('static', filename='images/shop_gray.svg')}}" alt="car">
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/shop_gray.svg')}}" alt="services-icon">
                         <span class="inline">Services</span>
                     </span>
                     <span>₹{{total_services_amount}}</span>
                 </li>
                 <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
                     <span>
-                        <img class="size-5 inline" src="{{url_for('static', filename='images/heart-rate_gray.svg')}}" alt="car">
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/heart-rate_gray.svg')}}" alt="heart-icon">
                         <span class="inline">Health</span>
                     </span>
                     <span>₹{{total_health_amount}}</span>
                 </li>
                 <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
                     <span>
-                        <img class="size-5 inline" src="{{url_for('static', filename='images/home_gray.svg')}}" alt="car">
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/home_gray.svg')}}" alt="home-icon">
                         <span class="inline">Home</span>
                     </span>
                     <span>₹{{total_home_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/rent_gray.svg')}}" alt="rent-icon">
+                        <span class="inline">Rent</span>
+                    </span>
+                    <span>₹{{total_rent_amount}}</span>
                 </li>
             </ul>
             

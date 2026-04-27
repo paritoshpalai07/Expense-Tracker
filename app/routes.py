@@ -9,6 +9,18 @@ from urllib.parse import urlsplit
 from collections import defaultdict
 from datetime import date
 
+svg_list = {
+    'Food & Drinks': 'images/fork-and-knife_gray.svg',
+    'Travel': 'images/airplane_gray.svg',
+    'Shopping': 'images/shopping-bag_gray.svg',
+    'Transportation': 'images/car_gray.svg',
+    'Entertainment': 'images/star_gray.svg',
+    'Services': 'images/shop_gray.svg',
+    'Health': 'images/heart-rate_gray.svg',
+    'Home': 'images/home_gray.svg',
+    'Rent': 'images/rent_gray.svg'
+}
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -18,13 +30,16 @@ def index():
     stmt = sa.select(Expense).where(Expense.user_id == current_user.id).order_by(Expense.date.desc())
     pagination = db.paginate(stmt, page=page, per_page=7)
     expenses = pagination.items
+
     all_expenses = db.session.scalars(stmt).all()
     total_expense = float(Expense.get_total_expense(all_expenses))
+    
     # expenses = db.session.scalars(sa.select(Expense).where(Expense.user_id==current_user.id).order_by(Expense.date.desc())).all()
     grouped_expenses = defaultdict(list)
     for expense in expenses:
         grouped_expenses[expense.date].append(expense)
     # total_expense = float(Expense.get_total_expense(expenses))
+
     total_food_and_drinks_amount = Expense.get_category_total(all_expenses, "Food & Drinks")
     total_travel_amount = Expense.get_category_total(all_expenses, "Travel")
     total_shopping_amount = Expense.get_category_total(all_expenses, "Shopping")
@@ -33,6 +48,9 @@ def index():
     total_services_amount = Expense.get_category_total(all_expenses, "Services")
     total_health_amount = Expense.get_category_total(all_expenses, "Health")
     total_home_amount = Expense.get_category_total(all_expenses, "Home")
+    total_rent_amount = Expense.get_category_total(all_expenses, "Rent")
+
+    print(total_rent_amount)
     income = db.session.scalars(
         sa.select(Income).where(
             Income.user_id == current_user.id and Income.date == date.today()
@@ -76,7 +94,9 @@ def index():
                            total_services_amount=total_services_amount,
                            total_health_amount=total_health_amount,
                            total_home_amount=total_home_amount,
-                           pagination=pagination    
+                           total_rent_amount=total_rent_amount,
+                           pagination=pagination   ,
+                           svg_list=svg_list 
                            )
 
 @app.route('/login/', methods=['GET', 'POST'])
