@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %} 
+    <section class="w-full h-full flex justify-between bg-base-300">
+        <aside class="bg-base-100 mt-3  w-[12vw] h-fit p-4 rounded-r-2xl">
+            <h1 class="font-bold italic border-b border-base-300 pb-2 mb-1">Hi, {{current_user.firstname}} 👋!</h1>
+            <ul class="menu bg-base-200 rounded">
+                <!-- <p class="fieldset fieldset-legend fieldset-label border-t border-b border-base-300">Options</p> -->
+                <li class="mb-1 p-1 rounded menu-active flex">
+                    Overview
+                </li>
+                <li class="mb-1 p-1 rounded hover:bg-base-300">Transactions</li>
+                <li class="mb-1 p-1 rounded hover:bg-base-300 transition-all">Statistics & Analysis</li>
+            </ul>
+        </aside>
+
+        <div class="w-[86vw] mt-3 grid grid-cols-4 grid-rows-3 gap-2 mr-3 mb-3">
+            <div class="bg-base-100 rounded-2xl p-4 flex flex-col justify-around">
+                <h2 class="text-2xl font-bold text-center">This Month Expenses</h2>
+                <p class="font-bold text-4xl text-center items-center">₹{{total_expense}}</p>
+                <button class="btn btn-primary">View Details</button>
+            </div>
+
+            <div class="bg-base-100 col-span-3 rounded-2xl p-7">
+                <h2 class="font-bold mb-5 bg-secondary w-fit py-2 px-3 rounded-xl text-xs">Account Summary</h2>
+
+                <div class="flex justify-between items-center">
+                    <div id="income-box" class="">
+                        <h3 class="text-2xl font-bold text-center">Total Income</h3>
+                        <div class="">
+                            <p class="font-bold text-4xl text-center text-primary-content inline">
+                                {% if not total_income %}
+                                    ₹0.0
+                                {% else %}
+                                ₹{{total_income}}
+                                {% endif %}
+                            </p>
+                            <img 
+                            class="inline size-6 mb-2 hover:size-7 transition-all cursor-pointer" 
+                            src="{{url_for('static', filename='images/plus-bold.svg')}}" 
+                            alt="plus-icon"
+                            onclick="document.getElementById('income-form').classList.toggle('hidden');
+                                    document.getElementById('income-box').classList.toggle('hidden')"
+                            >
+                        </div>
+                    </div>
+
+                    <form id="income-form" class="hidden" method="post">
+                        {{income_form.hidden_tag()}}
+                        {{income_form.income_amount.label(class="font-semibold")}} <br>
+                        {{income_form.income_amount(class="input mt-2")}} <br>
+                        <div class="flex items-center justify-between">
+                            {{income_form.submit(class="btn btn-primary mt-2")}}
+                            <button class="btn btn-secondary mt-2 gap-2"
+                            onclick="document.getElementById('income-form').classList.toggle('hidden');
+                                    document.getElementById('income-box').classList.toggle('hidden')"
+                            >Cancel</button>
+                        </div>
+                        <!-- <p>
+                            <label class="font-semibold" for="amount">Amount:</label>
+                            <input class="input mt-2" type="number">
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <button class="btn btn-primary mt-2" type="submit">Add Income</button>
+                            
+                        </div> -->
+                    </form>
+
+                    <div class="text-2xl font-bold">
+                        <h3 class="text-2xl font-bold text-center">Balance Remaining</h3>
+                        <p class="font-bold text-4xl text-center text-primary-content">₹{{total_income - total_expense}}</p>
+                    </div>
+                    <div class="text-2xl font-bold">
+                        <h3 class="text-2xl font-bold text-center">Total Expense</h3>
+                        <p class="font-bold text-4xl text-center text-secondary-content">₹{{total_expense}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-base-100 rounded-2xl col-span-2 row-span-2 p-4">
+                <h2 class="font-bold text-2xl">
+                    Expenses 
+                    <img 
+                        class="inline size-6 hover:size-7 transition-all cursor-pointer" 
+                        src="{{url_for('static', filename='images/plus-bold.svg')}}" 
+                        alt="plus-icon"
+                        onclick="
+                        document.getElementById('expense-list').classList.toggle('hidden');
+                        document.getElementById('expense-form').classList.toggle('hidden')
+                        "
+                        >
+                </h2>
+
+                <form class="hidden mt-5" id="expense-form" method="post">
+                    {{form.hidden_tag()}}
+                    <div class="mb-2">
+                        {{form.amount.label(class='font-semibold')}} <br>
+                        {{form.amount(class="input w-full mt-2")}}
+                        {% for error in form.amount.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-2">
+                        {{form.category.label(class='font-semibold')}} <br>
+                        {{form.category(class="select se w-full mt-2")}}
+                        {% for error in form.category.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-2">
+                        {{form.description.label(class='font-semibold')}} <br>
+                        {{form.description(class="input w-full mt-2")}}
+                        {% for error in form.description.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </div>
+
+                    {{form.submit(class="btn btn-primary")}}
+
+                </form>
+
+                <div id="expense-list" class="">
+                    {% if not grouped_expenses %}
+                        <p>You don't have any expenses yet. Let's add one!</p>
+                    {% endif %}
+
+                    <ul>
+                        {% for date, expenses in grouped_expenses.items() %}
+                        <p class="text-xs font-bold pb-2 border-b-2 border-base-300 mt-6">{{date.strftime('%B %d, %Y')}} <span class="font-bold mb-5 bg-base-300 w-fit py-1 px-2 rounded-xl text-xs ml-2">{{date.strftime('%A')}}</span></p>
+                            {% for expense in expenses %}
+                                <li class="flex justify-between items-center font-semibold p-2 border-b-2 border-base-300 text-sm">
+                                    <span class="flex items-center justify-between">
+                                        <img class="size-5 inline" src="{{url_for('static', filename='images/arrow-down_gray.svg')}}" alt="">
+                                        <span>{{expense.description | capitalize}}</span>
+                                    </span>
+                                    <span>
+                                        <span class="inline mr-3">
+                                            <img class="size-5 inline" src="{{url_for('static', filename='images/fork-and-knife_gray.svg')}}" alt="">
+                                            <span>{{expense.category}}</span>
+                                        </span> 
+                                        <span class="mr-3">₹{{expense.amount}}</span> 
+                                        <span class="">{{ expense.date.strftime('%B %d, %Y') }}</span>
+                                    </span>
+                                </li>
+                            {% endfor %}    
+                        {% endfor %}
+                        </ul>
+                        <div class="mt-4 font-semibold text-sm w-full flex justify-between items-center">
+                            {% if pagination.has_prev %}
+                                <a class="btn btn-xs btn-neutral" href="{{ url_for('index', page=pagination.prev_num) }}">Prev</a>
+                            {% endif %}
+
+                            <div class="text-xs">Page {{ pagination.page }} of {{ pagination.pages }}   </div>
+
+                            {% if pagination.has_next %}
+                                <a class="btn btn-xs btn-neutral" href="{{ url_for('index', page=pagination.next_num) }}">Next</a>
+                            {% endif %}
+                        </div>
+                </div>
+               
+                
+                <!-- <ul>
+                    <div>
+                        <p class="text-xs font-bold pb-2 border-b-2 border-base-300 rounded-sm">24 April, 2026 <span class="font-bold mb-5 bg-base-300 w-fit py-1 px-2 rounded-xl text-xs">Friday</span></p>
+                        <li>17:46 Food ₹100 This is description...</li>
+                    </div>
+                </ul> -->
+            </div>
+
+            <!-- <div class="bg-base-100 rounded-2xl">
+                <h2>April Expenses</h2>
+            </div> -->
+
+            <div class="bg-base-100 col-span-2 row-span-2 rounded-2xl p-4">
+                <h2 class="font-bold text-2xl mb-5">Categories</h2>
+
+
+            <ul>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/fork-and-knife_gray.svg')}}" alt="fork and knife">
+                        <span class="inline">Food & Drinks</span>
+                    </span>
+                    <span>₹{{total_food_and_drinks_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/airplane_gray.svg')}}" alt="airplane">
+                        <span class="inline">Travel</span>
+                    </span>
+                    <span>₹{{total_travel_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/shopping-bag_gray.svg')}}" alt="shopping bag">
+                        <span class="inline">Shopping</span>
+                    </span>
+                    <span>₹{{total_shopping_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/car_gray.svg')}}" alt="car">
+                        <span class="inline">Transportation</span>
+                    </span>
+                    <span>₹{{total_transportation_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/star_gray.svg')}}" alt="car">
+                        <span class="inline">Entertainment</span>
+                    </span>
+                    <span>₹{{total_entertainment_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/shop_gray.svg')}}" alt="car">
+                        <span class="inline">Services</span>
+                    </span>
+                    <span>₹{{total_services_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/heart-rate_gray.svg')}}" alt="car">
+                        <span class="inline">Health</span>
+                    </span>
+                    <span>₹{{total_health_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/home_gray.svg')}}" alt="car">
+                        <span class="inline">Home</span>
+                    </span>
+                    <span>₹{{total_home_amount}}</span>
+                </li>
+            </ul>
+            
+            <!-- <div class="bg-base-100 rounded-2xl">
+                <h2>April Expenses</h2>
+            </div>
+            <div class="bg-base-100 rounded-2xl">
+                <h2>April Expenses</h2> -->
+            </div>
+        </div>
+    </section>
+{% endblock %}

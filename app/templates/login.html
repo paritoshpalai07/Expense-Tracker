@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block body %}
+
+    {% with messages = get_flashed_messages() %}
+        <ul>
+        {% for message in messages %}
+            <li class="alert alert-error p-3 w-fit h-fit text-white mt-2 absolute z-50 top-0 left-1/2 -translate-x-1/2 rounded-lg flex justify-between items-center gap-3"><img class="size-5" src="{{url_for('static', filename='images/cross-white.png')}}" alt=""> {{message}}</li>
+        {% endfor %}
+        </ul>
+    {% endwith %}
+
+    <div class="w-full h-full flex justify-center items-center bg-base-300">
+
+        <form class="bg-base-100 p-4 rounded-xl w-md shadow" action="" method="post" novalidate>
+            {{form.hidden_tag()}}
+            <h1 class="text-2xl font-bold mb-3">Login:</h1>
+
+            <div class="mb-2">
+                {{form.username.label()}} <br>
+                {{form.username(class="input w-full mt-2")}}
+                {% for error in form.username.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            <div class="mb-2">
+                {{form.password.label()}}
+                <br>
+                {{form.password(class="input w-full mt-2")}}
+                {% for error in form.username.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            <p class="mb-2 clear-start flex items-center gap-2 ">{{ form.remember_me(class="checkbox-md") }} {{ form.remember_me.label() }}</p>
+            <p class="mb-2 ">Didn't have account? <a class="text-blue-800 underline" href="{{url_for('register')}}">Sign Up</a></p>
+
+            {{form.submit(class="btn btn-primary")}}
+        </form>
+        
+    </div>
+{% endblock %}
