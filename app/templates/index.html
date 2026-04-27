@@ -222,13 +222,13 @@
                     </span>
                     <span>₹{{total_services_amount}}</span>
                 </li>
-                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                <!-- <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
                     <span>
                         <img class="size-5 inline" src="{{url_for('static', filename='images/heart-rate_gray.svg')}}" alt="heart-icon">
                         <span class="inline">Health</span>
                     </span>
                     <span>₹{{total_health_amount}}</span>
-                </li>
+                </li> -->
                 <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
                     <span>
                         <img class="size-5 inline" src="{{url_for('static', filename='images/home_gray.svg')}}" alt="home-icon">
@@ -242,6 +242,13 @@
                         <span class="inline">Rent</span>
                     </span>
                     <span>₹{{total_rent_amount}}</span>
+                </li>
+                <li class="w-full flex justify-between font-semibold p-2 border-b-2 border-base-300">
+                    <span>
+                        <img class="size-5 inline" src="{{url_for('static', filename='images/rent_gray.svg')}}" alt="rent-icon">
+                        <span class="inline">Extra</span>
+                    </span>
+                    <span>₹{{total_extra_amount}}</span>
                 </li>
             </ul>
             

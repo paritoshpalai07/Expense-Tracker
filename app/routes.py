@@ -33,7 +33,7 @@ def index():
 
     all_expenses = db.session.scalars(stmt).all()
     total_expense = float(Expense.get_total_expense(all_expenses))
-    
+
     # expenses = db.session.scalars(sa.select(Expense).where(Expense.user_id==current_user.id).order_by(Expense.date.desc())).all()
     grouped_expenses = defaultdict(list)
     for expense in expenses:
@@ -49,6 +49,7 @@ def index():
     total_health_amount = Expense.get_category_total(all_expenses, "Health")
     total_home_amount = Expense.get_category_total(all_expenses, "Home")
     total_rent_amount = Expense.get_category_total(all_expenses, "Rent")
+    total_extra_amount = Expense.get_category_total(all_expenses, 'Extra')
 
     print(total_rent_amount)
     income = db.session.scalars(
@@ -95,7 +96,8 @@ def index():
                            total_health_amount=total_health_amount,
                            total_home_amount=total_home_amount,
                            total_rent_amount=total_rent_amount,
-                           pagination=pagination   ,
+                           total_extra_amount=total_extra_amount,
+                           pagination=pagination,
                            svg_list=svg_list 
                            )
 
